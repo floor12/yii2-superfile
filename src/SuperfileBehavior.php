@@ -23,9 +23,9 @@ class SuperfileBehavior extends Behavior
 
     public function fileForm($field)
     {
-        SuperFileFieldAsset::register(\Yii::$app->view);
+        SuperfileAsset::register(\Yii::$app->view);
         return \Yii::$app->view->renderFile('@vendor/floor12/yii2-superfile/views/fileForm.php', [
-            'form' => \Yii::createObject(SuperFileForm::class, [$this->owner->className(), $this->owner->id, $field, $this->fields])]);
+            'form' => \Yii::createObject(SuperfileForm::class, [$this->owner->className(), $this->owner->id, $field, $this->fields])]);
     }
 
     public function events()

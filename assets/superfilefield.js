@@ -29,7 +29,7 @@ console.log('superfile init');
         $scope.config = {};
 
         $scope.loadFiles = function () {
-            $http.get("/superfilefield", {
+            $http.get("/superfile", {
                     params: {
                         class: $scope.config.classname,
                         field: $scope.config.field,
@@ -45,7 +45,7 @@ console.log('superfile init');
         }
 
         $scope.turnFile = function (file, direction) {
-            $http.patch('/superfilefield/rotate', {
+            $http.patch('/superfile/rotate', {
                     id: file.id,
                     direction: direction
                 })
@@ -55,7 +55,7 @@ console.log('superfile init');
         }
 
         $scope.deleteFile = function (file) {
-            $http.delete('/superfilefield/delete', {params: {id: file.id}})
+            $http.delete('/superfile/delete', {params: {id: file.id}})
                 .success(function () {
                     $scope.files.splice($scope.files.indexOf(file), 1)
                 });
@@ -68,7 +68,7 @@ console.log('superfile init');
         }
 
         $scope.saveFilename = function (file) {
-            $http.patch('/superfilefield/update', {
+            $http.patch('/superfile/update', {
                 id: file.id,
                 title: file.title_new
             }).success(function () {
@@ -82,7 +82,7 @@ console.log('superfile init');
             $scope.errFiles = errFiles;
             angular.forEach(files, function (file) {
                 file.upload = Upload.upload({
-                    url: '/superfilefield/create/',
+                    url: '/superfile/create/',
                     data: {'file[]': file, 'class': $scope.config.classname, field: $scope.config.field}
                 });
 
@@ -170,7 +170,7 @@ console.log('superfile init');
             }
 
 
-            $http.patch('/superfilefield/crop', data)
+            $http.patch('/superfile/crop', data)
                 .success(function (response) {
                     $scope.currentCropFile.filename = response.filename;
                     $scope.currentCropFile.filename_preview = $scope.currentCropFile.filename + "?" + Math.random();
@@ -183,9 +183,7 @@ console.log('superfile init');
                             $scope.files = [$scope.currentCropFile];
                     }
                 })
-
         }
-
     })
 })
 ();

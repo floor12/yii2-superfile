@@ -12,7 +12,7 @@
 use \floor12\superfile\CropperAsset;
 
 CropperAsset::register($this);
-$template = Yii::$app->getAssetManager()->publish("@vendor/floor12/yii2-super-file-field/templates/files.html");
+$template = Yii::$app->getAssetManager()->publish("@vendor/floor12/yii2-superfile/templates/files.html");
 ?>
 <div class="form-group files-form" ng-controller="filesController">
     <div ng-include="'<?= $template[1] ?>'" onload='config = <?= $form->getJson() ?>; loadFiles()'></div>
