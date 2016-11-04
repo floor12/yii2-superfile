@@ -1,0 +1,62 @@
+<div class="superfiles-block">
+    <a class="btn btn-primary btn-xs" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="*"
+       ngf-max-size="100MB">{{config.button}}</a>
+
+    <div class="superfiles-list">
+        <div ng-repeat="file in files" class="superfile-wripper">
+            <a ng-if="!config.showControl" ng-click="deleteFile(file)" class="superfile-deleteOverlay">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+
+            <div class="superfile"
+                 ng-class="{previewed: config.preview && file.type==1, hidecontroled: !config.showControl}"
+                 data-ratio="{{config.ratio}}" style="background-image: url({{file.filename_preview}})">
+
+                <input name="{{config.classname_short}}[superfilesArray][{{config.field}}][]" value="{{file.id}}"
+                       type="hidden">
+
+                <div class="superfile-title-block" ng-class="{hide: !config.showName}">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    <span ng-hide="file.edit">{{file.title}}</span>
+                    <input ng-show="file.edit" ng-model="file.title_new" ng-blur="file.edit=false"
+                           my-enter="saveFilename(file)">
+                </div>
+
+                <div class="superfile-control" ng-if="config.showControl">
+                    <a ng-if="file.type==1 && !config.ratio" data-toggle="tooltip"
+                       title="Кадрировать изображение"
+                       ng-click="cropFile(file)" class="btn-fileform">
+                        <i class="fa fa-crop" aria-hidden="true"></i>
+                    </a>
+                    <a ng-if="file.type==1" data-toggle="tooltip"
+                       title="Повернуть изображение налево"
+                       class=" btn-fileform"
+                       ng-click="turnFile(file,1)">
+                        <i class="fa fa-undo" aria-hidden="true"></i>
+                        <span class="icon akppicon-arrow-left"></span>
+                    </a>
+                    <a ng-if="file.type==1" data-toggle="tooltip"
+                       title="Повернуть изображение направо"
+                       class=" btn-fileform"
+                       ng-click="turnFile(file,2)">
+                        <i class="fa fa-repeat" aria-hidden="true"></i>
+                    </a>
+                    <a target="_blank" href="{{file.filename}}" data-toggle="tooltip"
+                       title="Просмотреть в новом окне"
+                       class=" btn-fileform">
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                    </a>
+                    <a data-toggle="tooltip" title="Переименовать"
+                       class=" btn-fileform superfile-rename" ng-click="renameFile(file)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </a>
+                    <a ng-click="deleteFile(file)" data-toggle="tooltip" title="Удалить"
+                       class=" btn-fileform superfile-crop">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
