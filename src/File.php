@@ -26,8 +26,10 @@ use yii\validators\FileValidator;
  * @property integer $type
  * @property integer $video_status
  * @property string $rootPath
+ * @property string $rootPrevirePath
  * @property integer $size
  */
+
 class File extends \yii\db\ActiveRecord
 {
     const TYPE_FILE = 0;
@@ -38,44 +40,45 @@ class File extends \yii\db\ActiveRecord
     const VIDEO_STATUS_CONVERTING = 1;
     const VIDEO_STATUS_READY = 2;
 
+    const DIRECTORY_SEPARATOR = "/";
 
     const FOLDER_NAME = 'uploadedfiles';
 
     /**
-     * Статический метод создания экземпляра класса из загружженого файла
-     *
-     * @param $instance \yii\web\UploadedFile;
-     * @param $class string
-     * @param $field string
-     * @param $id integer
-     *
-     * @return \floor12\superfile\File
+     * Generated rand path to file saving
+     * @return string
      */
-
 
     public static function generatePath()
     {
         $folder0 = rand(10, 99);
         $folder1 = rand(10, 99);
 
-        $path0 = self::FOLDER_NAME . "/" . $folder0;
-        $path1 = self::FOLDER_NAME . "/" . $folder0 . "/" . $folder1;
+        $path0 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0;
+        $path1 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0 . self::DIRECTORY_SEPARATOR . $folder1;
 
-        $fullPath0 = Yii::getAlias('@frameworkbase') . "/" . 'backend/web/' . $path0;
-        $fullPath1 = Yii::getAlias('@frameworkbase') . "/" . 'backend/web/' . $path1;
+        $fullPath0 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path0;
+        $fullPath1 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path1;
 
         if (!file_exists($fullPath0))
             mkdir($fullPath0);
         if (!file_exists($fullPath1))
             mkdir($fullPath1);
 
-        return "/" . $path1 . "/" . md5(rand(0, 1000) . time());
+        return self::DIRECTORY_SEPARATOR . $path1 . self::DIRECTORY_SEPARATOR . md5(rand(0, 1000) . time());
     }
 
-    public static function createFromInstance($instance, SuperFileForm $form)
+    /**
+     * @param $instance
+     * @param SuperfileForm $form
+     * @return File
+     * @throws ErrorException
+     */
+
+    public static function createFromInstance($instance, SuperfileForm $form)
     {
         if ($instance->error)
-            return false;
+            throw new ErrorException("No file instance found.");
 
         if ($form->validator->validate($instance, $error)) {
             $filename = self::generatePath() . '.' . $instance->extension;
@@ -98,22 +101,32 @@ class File extends \yii\db\ActiveRecord
                 $instance->saveAs($path);
                 $file->updatePreview();
                 return $file;
-            }
+            } else
+                throw new ErrorException("Error white saving file model.");
         } else {
-            throw new ErrorException($error);
+            throw new ErrorException("File validation error.");
         }
     }
 
+    /**
+     * Return file type from content type
+     * @return int
+     */
+
     public function detectType()
     {
-        $tmp = explode('/', $this->content_type);
-        $mainType = $tmp[0];
-        if ($mainType == 'image')
+        $contentTypeArray = explode('/', $this->content_type);
+        if ($contentTypeArray[0] == 'image')
             return self::TYPE_IMAGE;
-        if ($mainType == 'video')
+        if ($contentTypeArray[0] == 'video')
             return self::TYPE_VIDEO;
         return self::TYPE_FILE;
     }
+
+    /**
+     * Rotate current file if it is image
+     * @param 1|2 $direction
+     */
 
     public function rotate($direction)
     {
@@ -126,40 +139,54 @@ class File extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Crop image and convert to jpeg
+     * @param $width
+     * @param $height
+     * @param $top
+     * @param $left
+     * @return string
+     * @throws ErrorException
+     */
+
     public function crop($width, $height, $top, $left)
     {
-        $src = $this->imageCreateFromAny();
-        $dest = imagecreatetruecolor($width, $height);
+        if ($this->type == self::TYPE_IMAGE) {
 
-        imagecopy($dest, $src, 0, 0, $left, $top, $width, $height);
+            $src = $this->imageCreateFromAny();
+            $dest = imagecreatetruecolor($width, $height);
 
-        $newName = $filename = self::generatePath() . '.jpeg';
-        $path = Yii::getAlias('@webroot') . $newName;
+            imagecopy($dest, $src, 0, 0, $left, $top, $width, $height);
 
-        @unlink($this->rootPath);
-        @unlink($this->rootPreviewPath);
+            $newName = $filename = self::generatePath() . '.jpeg';
+            $path = Yii::getAlias('@webroot') . $newName;
 
-        imagejpeg($dest, $path, 80);
+            @unlink($this->rootPath);
+            @unlink($this->rootPreviewPath);
 
-        imagedestroy($dest);
-        imagedestroy($src);
+            imagejpeg($dest, $path, 80);
 
-        $this->filename = $newName;
-        $this->content_type = mime_content_type($path);
-        $this->size = filesize($path);
-        if ($this->save()) {
-            $this->updatePreview();
-            return $this->filename;
-        }
+            imagedestroy($dest);
+            imagedestroy($src);
+
+            $this->filename = $newName;
+            $this->content_type = mime_content_type($path);
+            $this->size = filesize($path);
+            if ($this->save()) {
+                $this->updatePreview();
+                return $this->filename;
+            } else
+                throw new ErrorException("Error while saving file model");
+        } else
+            throw new ErrorException("This file is not an image");
 
     }
-
 
     /**
      * @inheritdoc
      */
-    public
-    static function tableName()
+
+    public static function tableName()
     {
         return 'file';
     }
@@ -167,8 +194,8 @@ class File extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public
-    function rules()
+
+    public function rules()
     {
         return [
             [['class', 'field', 'filename', 'content_type', 'type'], 'required'],
@@ -180,8 +207,8 @@ class File extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public
-    function attributeLabels()
+
+    public function attributeLabels()
     {
         return [
             'id' => Yii::t('app', 'ID'),
@@ -196,8 +223,11 @@ class File extends \yii\db\ActiveRecord
         ];
     }
 
-    public
-    function updatePreview()
+    /**
+     * Updating preview
+     */
+
+    public function updatePreview()
     {
         if ($this->type == self::TYPE_VIDEO) {
             if (file_exists($this->rootPath)) {
@@ -225,36 +255,43 @@ class File extends \yii\db\ActiveRecord
             }
     }
 
-
-    public
-    function getRootPath()
-    {
-        return Yii::getAlias('@app') . "/" . 'web' . $this->filename;
-    }
-
-    public
-    function getRootPreviewPath()
-    {
-        return Yii::getAlias('@app') . "/" . 'web' . $this->filename . '.jpg';
-    }
-
-
     /**
-     * Подчищаем за собой
+     * Return root path of image
+     * @return string
      */
 
-    public
-    function afterDelete()
+    public function getRootPath()
+    {
+        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename;
+    }
+
+    /**
+     * Return root path of preview
+     * @return string
+     */
+
+    public function getRootPreviewPath()
+    {
+        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
+    }
+
+    /**
+     * Delete files from disk
+     */
+
+    public function afterDelete()
     {
         @unlink($this->rootPath);
         @unlink($this->rootPreviewPath);
-
         parent::afterDelete();
     }
 
+    /**
+     * Method to read files from any mime types
+     * @return bool
+     */
 
-    public
-    function imageCreateFromAny()
+    public function imageCreateFromAny()
     {
         $type = exif_imagetype($this->rootPath);
         $allowedTypes = array(

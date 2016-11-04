@@ -16,7 +16,7 @@ $template = Yii::$app->getAssetManager()->publish("@vendor/floor12/yii2-superfil
 ?>
 <div class="form-group files-form" ng-controller="filesController">
     <div ng-include="'<?= $template[1] ?>'" onload='config = <?= $form->getJson() ?>; loadFiles()'></div>
-    <?= $this->render('cropper'); ?>
+    <?= $this->render('cropper') ?>
 </div>
 
 <script>

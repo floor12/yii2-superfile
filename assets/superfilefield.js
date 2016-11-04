@@ -15,7 +15,6 @@ console.log('superfile init');
                     scope.$apply(function () {
                         scope.$eval(attrs.myEnter);
                     });
-
                     event.preventDefault();
                 }
             });
@@ -114,15 +113,15 @@ console.log('superfile init');
         }
 
         $scope.stopCrop = function () {
-            $('#cropperModal').modal('hide');
+            $('div.cropperModal' + $scope.config.field).modal('hide');
         }
 
         $scope.cropFile = function (file) {
-            $('#cropperModal').modal();
+            $('div.cropperModal' + $scope.config.field).modal();
             $scope.currentCropImage = $('<img>').attr('src', file.filename).addClass('cropedImage');
             $scope.currentCropImage.attr('src', file.filename);
-            $('#cropArea').html("");
-            $('#cropArea').append($scope.currentCropImage);
+            $('div.cropArea' + $scope.config.field).html("");
+            $('div.cropArea' + $scope.config.field).append($scope.currentCropImage);
             $scope.currentCropFile = file;
             setTimeout(function () {
                 $scope.cropper = $scope.currentCropImage.cropper({
@@ -174,8 +173,8 @@ console.log('superfile init');
                 .success(function (response) {
                     $scope.currentCropFile.filename = response.filename;
                     $scope.currentCropFile.filename_preview = $scope.currentCropFile.filename + "?" + Math.random();
-                    $('#cropArea').html('');
-                    $('#cropperModal').modal('hide');
+                    $('div.cropArea' + $scope.config.field).html('');
+                    $('div.cropperModal' + $scope.config.field).modal('hide');
                     if ($scope.config.ratio) {
                         if ($scope.config.multiply)
                             $scope.files.push($scope.currentCropFile);

@@ -5,18 +5,15 @@
  * Date: 31.05.2016
  * Time: 12:42
  */
-
-
 ?>
 
-
-<div class="modal fade cropperModal" id="cropperModal" tabindex="-1" role="dialog">
+<div class="modal fade cropperModal{{config.field}}" id="cropperModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Кадрирование изображения</h4>
             </div>
-            <div class="modal-body" id='cropArea'></div>
+            <div class="modal-body cropArea{{config.field}}"></div>
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-6 text-left">

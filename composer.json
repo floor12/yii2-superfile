@@ -29,7 +29,6 @@
       "floor12\\superfile\\": [
         "src",
         "src/assets",
-        "src/logic",
         "src/controllers"
       ]
     }
