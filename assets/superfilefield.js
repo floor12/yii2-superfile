@@ -36,10 +36,15 @@ console.log('superfile init');
                     }
                 })
                 .success(function (response) {
-                    angular.forEach(response, function (object) {
-                        object.filename_preview = object.filename + ".jpg?" + Math.random();
-                        $scope.files.push(object);
-                    })
+                    if ($scope.config.multiply)
+                        angular.forEach(response, function (object) {
+                            object.filename_preview = object.filename + ".jpg?" + Math.random();
+                            $scope.files.push(object);
+                        })
+                    else {
+                        response.filename_preview = response.filename + ".jpg?" + Math.random();
+                        $scope.files.push(response);
+                    }
                 })
         }
 

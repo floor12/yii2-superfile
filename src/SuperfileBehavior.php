@@ -75,7 +75,7 @@ class SuperfileBehavior extends Behavior
         return $this->owner->hasMany(File::className(), ['object_id' => 'id'])->onCondition(['class' => $this->owner->className()]);;
     }
 
-    public function getSuperFiles()
+    public function getSuperfiles()
     {
         $files = $this->owner->files;
         $ret = [];
@@ -84,13 +84,16 @@ class SuperfileBehavior extends Behavior
         }
         /** @var $file File */
         if ($files) foreach ($files as $file) {
-            $ret[$file->field][] = $file;
+            if ((isset($this->fields[$file->field]['multiply']) && $this->fields[$file->field]['multiply'] == false))
+                $ret[$file->field] = $file;
+            else
+                $ret[$file->field][] = $file;
         }
         return $ret;
     }
 
     public
-    function getAllSuperFilesAsArray()
+    function getAllSuperfilesAsArray()
     {
         $ret = [];
         if ($this->superFiles)
