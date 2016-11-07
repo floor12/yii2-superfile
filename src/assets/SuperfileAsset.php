@@ -26,6 +26,7 @@ class SuperfileAsset extends AssetBundle
         'yii\jui\JuiAsset',
         'yii\bootstrap\BootstrapAsset',
         'floor12\superfile\AngularAsset',
+        'rmrevin\yii\fontawesome\AssetBundle',
         'floor12\superfile\UploaderAsset'
     ];
 
