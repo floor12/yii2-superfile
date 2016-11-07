@@ -42,8 +42,10 @@ console.log('superfile init');
                             $scope.files.push(object);
                         })
                     else {
-                        response.filename_preview = response.filename + ".jpg?" + Math.random();
-                        $scope.files.push(response);
+                        if (object.id) {
+                            response.filename_preview = response.filename + ".jpg?" + Math.random();
+                            $scope.files.push(response);
+                        }
                     }
                 })
         }

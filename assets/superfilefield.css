@@ -3,11 +3,12 @@ div#cropperModal {
     z-index: 9999;
 }
 
-div#cropArea img.cropedImage {
+img.cropedImage {
     width: 100%;
+    max-width: 100%;
 }
 
- /*Блок файлов*/
+/*Блок файлов*/
 
 a.superfile-deleteOverlay {
     display: block;
