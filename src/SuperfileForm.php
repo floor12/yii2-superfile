@@ -31,6 +31,7 @@ class SuperfileForm
     public $validator;
     public $successFunction = "";
     public $errorFunction = "alert(JSON.parse(response).message);";
+    public $deleteFunction = "";
 
 
     /**

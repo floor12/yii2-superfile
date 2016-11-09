@@ -64,6 +64,7 @@ console.log('superfile init');
             $http.delete('/superfile/delete', {params: {id: file.id}})
                 .success(function () {
                     $scope.files.splice($scope.files.indexOf(file), 1)
+                    eval($scope.config.deleteFunction);
                 });
 
         }
@@ -86,6 +87,7 @@ console.log('superfile init');
         $scope.uploadFiles = function (files, errFiles) {
 
             $scope.errFiles = errFiles;
+
             angular.forEach(files, function (file) {
                 file.upload = Upload.upload({
                     url: '/superfile/create/',
@@ -96,10 +98,10 @@ console.log('superfile init');
                     console.log($scope.config);
                     $timeout(function () {
                         response.data.filename_preview = response.data.filename + ".jpg?" + Math.random();
-
                         if ($scope.config.ratio) {
                             $scope.cropFile(response.data);
                         } else {
+                            eval($scope.config.successFunction);
                             if ($scope.config.multiply)
                                 $scope.files.push(response.data);
                             else
@@ -116,6 +118,9 @@ console.log('superfile init');
                 });
             });
 
+            angular.forEach(files, function (file) {
+                eval($scope.config.errorFunction);
+            })
 
         }
 
@@ -183,6 +188,7 @@ console.log('superfile init');
                     $('div.cropArea' + $scope.config.field).html('');
                     $('div.cropperModal' + $scope.config.field).modal('hide');
                     if ($scope.config.ratio) {
+                        eval($scope.config.successFunction);
                         if ($scope.config.multiply)
                             $scope.files.push($scope.currentCropFile);
                         else

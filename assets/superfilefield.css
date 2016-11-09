@@ -5,6 +5,7 @@ div#cropperModal {
 
 img.cropedImage {
     width: 100%;
+    max-height: 600px;
     max-width: 100%;
 }
 
