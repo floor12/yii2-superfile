@@ -75,7 +75,7 @@ class File extends \yii\db\ActiveRecord
      * @throws ErrorException
      */
 
-    public static function createFromInstance($instance, SuperfileForm $form)
+    public static function createFromInstance($instance, SuperileForm $form)
     {
         if ($instance->error)
             throw new ErrorException("No file instance found.");
