@@ -29,7 +29,6 @@ use yii\validators\FileValidator;
  * @property string $rootPrevirePath
  * @property integer $size
  */
-
 class File extends \yii\db\ActiveRecord
 {
     const TYPE_FILE = 0;
@@ -273,6 +272,17 @@ class File extends \yii\db\ActiveRecord
     public function getRootPreviewPath()
     {
         return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
+    }
+
+    /**
+     * Return web path of preview
+     * @return string
+     */
+
+
+    public function getFilenamePreview()
+    {
+        return $this->filename . ".jpg";
     }
 
     /**
