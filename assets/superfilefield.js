@@ -8,6 +8,19 @@ console.log('superfile init');
 
     var app = angular.module('files', ['ngFileUpload']);
 
+
+    app.config(['$provide', function ($provide) {
+        $provide.decorator('$browser', ['$delegate', function ($delegate) {
+            $delegate.onUrlChange = function () {
+            };
+            $delegate.url = function () {
+                return ""
+            };
+            return $delegate;
+        }]);
+    }]);
+
+    
     app.directive('myEnter', function () {
         return function (scope, element, attrs) {
             element.bind("keydown keypress", function (event) {
