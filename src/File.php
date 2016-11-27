@@ -278,6 +278,7 @@ class File extends \yii\db\ActiveRecord
      * Return web path of preview
      * @return string
      */
+    
 
 
     public function getFilenamePreview()
