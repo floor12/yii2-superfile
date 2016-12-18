@@ -20,7 +20,7 @@ console.log('superfile init');
         }]);
     }]);
 
-    
+
     app.directive('myEnter', function () {
         return function (scope, element, attrs) {
             element.bind("keydown keypress", function (event) {
@@ -139,6 +139,11 @@ console.log('superfile init');
 
         $scope.stopCrop = function () {
             $('div.cropperModal' + $scope.config.field).modal('hide');
+            if ($('div.modal-backdrop').hasClass('in')) {
+                setTimeout(function () {
+                    $('body').addClass('modal-open');
+                }, 600);
+            }
         }
 
         $scope.cropFile = function (file) {
@@ -200,6 +205,12 @@ console.log('superfile init');
                     $scope.currentCropFile.filename_preview = $scope.currentCropFile.filename + "?" + Math.random();
                     $('div.cropArea' + $scope.config.field).html('');
                     $('div.cropperModal' + $scope.config.field).modal('hide');
+                    if ($('div.modal-backdrop').hasClass('in')) {
+                        setTimeout(function () {
+                            $('body').addClass('modal-open');
+                        }, 600);
+                    }
+
                     if ($scope.config.ratio) {
                         eval($scope.config.successFunction);
                         if ($scope.config.multiply)
