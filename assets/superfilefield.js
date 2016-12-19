@@ -147,7 +147,8 @@ console.log('superfile init');
         }
 
         $scope.cropFile = function (file) {
-            $('div.cropperModal' + $scope.config.field).modal();
+            current_modal = $('div.cropperModal' + $scope.config.field);
+            current_modal.modal();
             $scope.currentCropImage = $('<img>').attr('src', file.filename).addClass('cropedImage');
             $scope.currentCropImage.attr('src', file.filename);
             $('div.cropArea' + $scope.config.field).html("");
@@ -176,6 +177,19 @@ console.log('superfile init');
                 } else {
                     $scope.cropper.cropper('setAspectRatio', eval($scope.config.ratio));
                 }
+
+                parent_modal = current_modal.parentsUntil("div.modal-content").parent();
+                if (parent_modal.length) {
+                    setTimeout(function () {
+                        current_height = current_modal.find('.modal-content').height()
+                        parent_height = parent_modal.height();
+                        if (parent_height < current_height)
+                            parent_modal.height(current_height + 80);
+                        current_modal.parent().parent().height('auto');
+                    }, 500);
+
+                }
+
             }, 500)
 
         }
