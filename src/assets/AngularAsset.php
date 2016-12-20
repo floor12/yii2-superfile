@@ -15,6 +15,6 @@ class AngularAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/tesjin/yii2-angularjs';
     public $js = [
-        'js/angular.js',
+        'js/angular.min.js',
     ];
 }
