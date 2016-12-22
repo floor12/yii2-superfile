@@ -11,9 +11,6 @@ use yii\web\AssetBundle;
 class SuperfileAsset extends AssetBundle
 {
 
-    public $publishOptions = [
-        'forceCopy' => true,
-    ];
     public $sourcePath = '@vendor/floor12/yii2-superfile/assets/';
     public $css = [
         'superfilefield.css'
