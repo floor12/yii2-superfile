@@ -103,7 +103,7 @@ class WebController extends ActiveController
         $className = Yii::$app->request->post('class');
         $field = \Yii::$app->request->post('field');
 
-        $owner = \Yii::createObject($className = Yii::$app->request->post('class'));
+        $owner = \Yii::createObject($className);
         if (!$owner)
             throw new BadRequestHttpException('Owner class not found');
         $form = \Yii::createObject(SuperfileForm::class, [$className, 0, $field, $owner->fields]);
