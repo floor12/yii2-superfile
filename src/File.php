@@ -43,12 +43,6 @@ class File extends \yii\db\ActiveRecord
 
     const FOLDER_NAME = 'uploadedfiles';
 
-
-    public function __toString()
-    {
-        return $this->filename;
-    }
-    
     /**
      * Generated rand path to file saving
      * @return string
@@ -105,6 +99,8 @@ class File extends \yii\db\ActiveRecord
             if ($file->save()) {
                 $instance->saveAs($path);
                 $file->updatePreview();
+                if ($form->processor)
+                    \Yii::createObject($form->processor, [$path])->execute();
                 return $file;
             } else
                 throw new ErrorException("Error white saving file model.");
@@ -284,7 +280,6 @@ class File extends \yii\db\ActiveRecord
      * Return web path of preview
      * @return string
      */
-    
 
 
     public function getFilenamePreview()

@@ -25,6 +25,7 @@ class SuperfileForm
     public $multiply = false;
     public $button = 'Добавить файлы';
     public $label = true;
+    public $processor = null;
     private $mimeTypes = null;
     private $extentions = null;
     private $maxSize = null;
