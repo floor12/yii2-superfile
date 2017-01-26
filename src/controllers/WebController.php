@@ -106,7 +106,7 @@ class WebController extends ActiveController
         $owner = \Yii::createObject($className, []);
         if (!$owner)
             throw new BadRequestHttpException('Owner class not found');
-        $form = \Yii::createObject(SuperfileForm::class, [$className, 0, $field, $owner->fields]);
+        $form = \Yii::createObject(SuperfileForm::class, [$className, 0, $field, $owner->fields]); 
 
 
         $files = UploadedFile::getInstancesByName('file');
