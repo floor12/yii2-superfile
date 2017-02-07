@@ -131,9 +131,9 @@ console.log('superfile init');
                 });
             });
 
-            angular.forEach(files, function (file) {
-                eval($scope.config.errorFunction);
-            })
+            // angular.forEach(files, function (file) {
+            //     eval($scope.config.errorFunction);
+            // })
 
         }
 
