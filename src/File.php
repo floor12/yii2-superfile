@@ -12,6 +12,7 @@ namespace floor12\superfile;
 use Yii;
 use yii\base\ErrorException;
 use yii\validators\FileValidator;
+use yii\web\BadRequestHttpException;
 
 /**
  * Основная модель файла, подключаемая через поведение к моделям.
@@ -65,6 +66,42 @@ class File extends \yii\db\ActiveRecord
             mkdir($fullPath1);
 
         return self::DIRECTORY_SEPARATOR . $path1 . self::DIRECTORY_SEPARATOR . md5(rand(0, 1000) . time());
+    }
+
+
+    public static function createFromUrl($url, $class, $field)
+    {
+        $content = file_get_contents($url);
+        $extansion = pathinfo($url, PATHINFO_EXTENSION);
+        $classname = str_replace('\\', '\\\\', $class);
+        $filename = self::generatePath() . "." . $extansion;
+
+        $path = Yii::getAlias('@webroot') . $filename;
+
+        $fileOnDisk = fopen($path, "w");
+        if (!$fileOnDisk)
+            throw new BadRequestHttpException("Unable write file");
+        fwrite($fileOnDisk, $content);
+        fclose($fileOnDisk);
+
+
+        $file = new File();
+        $file->field = $field;
+        $file->class = $classname;
+        $file->filename = $filename;
+        $file->title = $url;
+        $file->content_type = mime_content_type($path);
+        $file->type = $file->detectType();
+        $file->size = filesize($path);
+        $file->created = time();
+        $file->user_id = (isset(\Yii::$app->user) && \Yii::$app->user->id) ? \Yii::$app->user->id : 0;
+        if ($file->type == self::TYPE_VIDEO)
+            $file->video_status = 0;
+        if ($file->save()) {
+            return $file->id;
+        }
+
+
     }
 
     /**
