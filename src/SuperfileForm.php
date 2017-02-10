@@ -31,7 +31,7 @@ class SuperfileForm
     private $maxSize = null;
     public $validator;
     public $successFunction = "";
-    public $errorFunction = "alert('Ошибка 8(');";
+    public $errorFunction = "";
     public $deleteFunction = "";
 
 
