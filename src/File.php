@@ -72,8 +72,9 @@ class File extends \yii\db\ActiveRecord
     public static function createFromUrl($url, $class, $field)
     {
         $content = file_get_contents($url);
-        $extansion = pathinfo($url, PATHINFO_EXTENSION);
-        $classname = str_replace('\\', '\\\\', $class);
+        $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
+        $extansion = $tmp_extansion[0];
+        $classname = $class;
         $filename = self::generatePath() . "." . $extansion;
 
         $path = Yii::getAlias('@webroot') . $filename;
@@ -98,6 +99,7 @@ class File extends \yii\db\ActiveRecord
         if ($file->type == self::TYPE_VIDEO)
             $file->video_status = 0;
         if ($file->save()) {
+            $file->updatePreview();
             return $file->id;
         }
 
