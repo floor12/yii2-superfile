@@ -35,12 +35,22 @@ console.log('superfile init');
     });
 
 
-    app.controller('filesController', function ($scope, $http, Upload, $timeout) {
+    app.controller('filesController', function ($scope, $http, Upload, $timeout, $rootElement) {
 
         $scope.files = [];
         $scope.config = {};
+        $scope.form = $($rootElement).parents('form');
 
         $scope.loadFiles = function () {
+
+            if ($scope.config.required) {
+
+                $(document).on('submit', $scope.form, function () {
+                    if ($scope.files.length == 0)
+                        return false;
+                })
+            }
+
             $http.get("/superfile", {
                     params: {
                         class: $scope.config.classname,
@@ -259,8 +269,8 @@ $(document).on('mouseover', 'div.superfile', function () {
 
 $(document).on('mouseout', 'div.superfile', function () {
     $(this).find('div.superfile-title-block').removeClass('hovered')
-
 })
+
 
 
 

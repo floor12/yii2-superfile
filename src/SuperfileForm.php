@@ -22,6 +22,7 @@ class SuperfileForm
     public $ratio = NULL;
     public $preview = false;
     public $title = 'Файлы';
+    public $required = false;
     public $multiply = false;
     public $button = 'Добавить файлы';
     public $label = true;

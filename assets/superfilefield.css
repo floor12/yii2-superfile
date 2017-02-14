@@ -11,6 +11,11 @@ img.cropedImage {
 
 /*Блок файлов*/
 
+p.superfile-error {
+    color: #a94442;
+    margin-top: 10px;
+}
+
 a.superfile-deleteOverlay {
     display: block;
     position: absolute;
