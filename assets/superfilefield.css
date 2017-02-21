@@ -97,3 +97,7 @@ div.superfile-control a {
 div.superfile-control a:hover {
     color: #000000;
 }
+
+.invisible {
+    visibility: hidden;
+}

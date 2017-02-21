@@ -17,7 +17,7 @@
                 <input name="{{config.classname_short}}[superfilesArray][{{config.field}}][]" value="{{file.id}}"
                        type="hidden">
 
-                <div class="superfile-title-block" ng-class="{hide: !config.showName}">
+                <div class="superfile-title-block" ng-class="{invisible: !config.showName}">
                     <i class="fa fa-picture-o" aria-hidden="true"></i>
                     <span ng-hide="file.edit">{{file.title}}</span>
                     <input ng-show="file.edit" ng-model="file.title_new" ng-blur="file.edit=false"
