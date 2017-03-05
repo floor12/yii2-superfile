@@ -57,8 +57,8 @@ class File extends \yii\db\ActiveRecord
         $path0 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0;
         $path1 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0 . self::DIRECTORY_SEPARATOR . $folder1;
 
-        $fullPath0 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path0;
-        $fullPath1 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path1;
+        $fullPath0 = Yii::getAlias('@webroot') . self::DIRECTORY_SEPARATOR . $path0;
+        $fullPath1 = Yii::getAlias('@webroot') . self::DIRECTORY_SEPARATOR . $path1;
 
         if (!file_exists($fullPath0))
             mkdir($fullPath0);
@@ -68,10 +68,22 @@ class File extends \yii\db\ActiveRecord
         return self::DIRECTORY_SEPARATOR . $path1 . self::DIRECTORY_SEPARATOR . md5(rand(0, 1000) . time());
     }
 
+    /**
+     * @param $url string
+     * @param $class string
+     * @param $field string
+     * @param int $object_id
+     * @return int
+     * @throws BadRequestHttpException
+     */
 
-    public static function createFromUrl($url, $class, $field)
+
+    public static function createFromUrl($url, $class, $field, $object_id = 0)
     {
-        $content = file_get_contents($url);
+        $content = @file_get_contents($url);
+        if (!$content)
+            return false;
+
         $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
         $extansion = $tmp_extansion[0];
         $classname = $class;
@@ -91,6 +103,7 @@ class File extends \yii\db\ActiveRecord
         $file->class = $classname;
         $file->filename = $filename;
         $file->title = $url;
+        $file->object_id = $object_id;
         $file->content_type = mime_content_type($path);
         $file->type = $file->detectType();
         $file->size = filesize($path);
