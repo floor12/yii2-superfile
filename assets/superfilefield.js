@@ -51,7 +51,7 @@ console.log('superfile init');
                 })
             }
 
-            $http.get("/superfile", {
+            $http.get("/superfile/index", {
                     params: {
                         class: $scope.config.classname,
                         field: $scope.config.field,
