@@ -57,8 +57,8 @@ class File extends \yii\db\ActiveRecord
         $path0 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0;
         $path1 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0 . self::DIRECTORY_SEPARATOR . $folder1;
 
-        $fullPath0 = Yii::getAlias('@webroot') . self::DIRECTORY_SEPARATOR . $path0;
-        $fullPath1 = Yii::getAlias('@webroot') . self::DIRECTORY_SEPARATOR . $path1;
+        $fullPath0 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path0;
+        $fullPath1 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path1;
 
         if (!file_exists($fullPath0))
             mkdir($fullPath0);
@@ -68,22 +68,45 @@ class File extends \yii\db\ActiveRecord
         return self::DIRECTORY_SEPARATOR . $path1 . self::DIRECTORY_SEPARATOR . md5(rand(0, 1000) . time());
     }
 
-    /**
-     * @param $url string
-     * @param $class string
-     * @param $field string
-     * @param int $object_id
-     * @return int
-     * @throws BadRequestHttpException
-     */
-
-
-    public static function createFromUrl($url, $class, $field, $object_id = 0)
+    public static function createFromBase64($string, $class, $field)
     {
-        $content = @file_get_contents($url);
-        if (!$content)
-            return false;
+        $data = explode(',', $string);
+        $info = explode(';', $data[0]);
+        $tmp = explode('/', $info[0]);
+        $extansion = $tmp[1];
 
+        $classname = $class;
+        $filename = self::generatePath() . "." . $extansion;
+
+        $path = Yii::getAlias('@webroot') . $filename;
+
+        $ifp = fopen($path, "wb");
+        fwrite($ifp, base64_decode($data[1]));
+        fclose($ifp);
+
+        $file = new File();
+        $file->field = $field;
+        $file->class = $classname;
+        $file->filename = $filename;
+        $file->title = 'file';
+        $file->content_type = mime_content_type($path);
+        $file->type = $file->detectType();
+        $file->size = filesize($path);
+        $file->created = time();
+        $file->user_id = (isset(\Yii::$app->user) && \Yii::$app->user->id) ? \Yii::$app->user->id : 0;
+        if ($file->type == self::TYPE_VIDEO)
+            $file->video_status = 0;
+        if ($file->save()) {
+            $file->updatePreview();
+            return $file->id;
+        }
+
+    }
+
+
+    public static function createFromUrl($url, $class, $field)
+    {
+        $content = file_get_contents($url);
         $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
         $extansion = $tmp_extansion[0];
         $classname = $class;
@@ -97,13 +120,11 @@ class File extends \yii\db\ActiveRecord
         fwrite($fileOnDisk, $content);
         fclose($fileOnDisk);
 
-
         $file = new File();
         $file->field = $field;
         $file->class = $classname;
         $file->filename = $filename;
         $file->title = $url;
-        $file->object_id = $object_id;
         $file->content_type = mime_content_type($path);
         $file->type = $file->detectType();
         $file->size = filesize($path);
@@ -115,7 +136,6 @@ class File extends \yii\db\ActiveRecord
             $file->updatePreview();
             return $file->id;
         }
-
 
     }
 
