@@ -4,6 +4,18 @@
 
 console.log('superfile init');
 
+$(document).ready(function () {
+    setInterval(function () {
+
+        $(".superfiles-list").sortable({
+            opacity: 0.5,
+            revert: 1,
+            items: "div.superfile",
+        });
+    }, 2000)
+});
+
+
 (function () {
 
     var app = angular.module('files', ['ngFileUpload']);
