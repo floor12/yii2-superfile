@@ -66,7 +66,7 @@ class File extends \yii\db\ActiveRecord
             mkdir($fullPath1);
 
         return self::DIRECTORY_SEPARATOR . $path1 . self::DIRECTORY_SEPARATOR . md5(rand(0, 1000) . time());
-    }b    
+    }
 
     public static function createFromBase64($string, $class, $field)
     {
