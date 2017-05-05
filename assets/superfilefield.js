@@ -49,6 +49,7 @@ $(document).ready(function () {
 
     app.controller('filesController', function ($scope, $http, Upload, $timeout, $rootElement) {
 
+        $scope.progress = 0;
         $scope.files = [];
         $scope.config = {};
         $scope.form = $($rootElement).parents('form');
@@ -104,9 +105,13 @@ $(document).ready(function () {
 
         }
 
-        $scope.renameFile = function (file) {
+        $scope.renameFile = function (file, event) {
             file.title_new = file.title;
             file.edit = true;
+            setTimeout(function () {
+                $(event.currentTarget).parent().parent().find('input').focus();
+            }, 200);
+
         }
 
         $scope.saveFilename = function (file) {
@@ -148,8 +153,9 @@ $(document).ready(function () {
                     if (response.status > 0)
                         $scope.errorMsg = response.status + ': ' + response.data;
                 }, function (evt) {
-                    file.progress = Math.min(100, parseInt(100.0 *
+                    $scope.progress = Math.min(100, parseInt(100.0 *
                         evt.loaded / evt.total));
+                    console.log($scope.progress);
                 });
             });
 

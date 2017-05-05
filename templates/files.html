@@ -1,7 +1,11 @@
 <label ng-show="config.label">{{config.title}}</label>
-<div class="superfiles-block">
+<div class="superfiles-block"
+     ngf-drag-over-class="'superfiles-dragover'"
+     ngf-drop="uploadFiles($files, $invalidFiles)"  ngf-multiple="true" multiple accept="*" ngf-max-size="100MB">
+
     <a class="btn btn-primary btn-xs" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="*"
-       ngf-max-size="100MB"><i class="fa fa-plus" aria-hidden="true"></i>  {{config.button}}</a>
+       ngf-max-size="100MB"><i class="fa fa-plus" aria-hidden="true"></i> {{config.button}}</a>
+
     <p class="superfile-error" ng-show="!files.length && config.required">Необходимо загрузить файл</p>
 
     <div class="superfiles-list">
@@ -49,7 +53,7 @@
                         <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
                     <a data-toggle="tooltip" title="Переименовать"
-                       class=" btn-fileform superfile-rename" ng-click="renameFile(file)">
+                       class=" btn-fileform superfile-rename" ng-click="renameFile(file,$event)">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <a ng-click="deleteFile(file)" data-toggle="tooltip" title="Удалить"
@@ -61,4 +65,14 @@
             </div>
         </div>
     </div>
+
+    <div class="clearfix"></div>
+
+    <div class="progress"  ng-show="progress != 0 && progress!= 100">
+        <divclass="progress-bar  progress-bar-grey progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
+        <span>{{progress}}%</span>
+    </div>
+</div>
+
+<div class="clearfix"></div>
 </div>

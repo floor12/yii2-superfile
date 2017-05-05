@@ -140,8 +140,7 @@ class File extends \yii\db\ActiveRecord
                 if (isset($exif['Orientation'])) {
                     $rotatingImage = new SimpleImage();
                     $rotatingImage->load($path);
-                    switch($ort)
-                    {
+                    switch ($ort) {
 
                         case 3: // 180 rotate left
                             $rotatingImage->rotateDegrees(180);
@@ -201,12 +200,11 @@ class File extends \yii\db\ActiveRecord
 
                 if ($file->type == self::TYPE_IMAGE) {
                     $exif = exif_read_data($path);
-                    $ort = $exif['Orientation'];
                     if (isset($exif['Orientation'])) {
+                        $ort = $exif['Orientation'];
                         $rotatingImage = new SimpleImage();
                         $rotatingImage->load($path);
-                        switch($ort)
-                        {
+                        switch ($ort) {
 
                             case 3: // 180 rotate left
                                 $rotatingImage->rotateDegrees(180);

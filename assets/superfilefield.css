@@ -16,6 +16,20 @@ p.superfile-error {
     margin-top: 10px;
 }
 
+div.superfiles-block {
+    transition: all 0.1s ease-out 0s;
+}
+
+div.superfiles-dragover {
+    background-color: #f6f9f2;
+    border: 2px #3231c6 dashed;
+    padding: 5px;
+}
+
+.progress-bar-grey {
+    background-color: #dadada;
+}
+
 a.superfile-deleteOverlay {
     display: block;
     position: absolute;
