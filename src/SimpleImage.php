@@ -98,4 +98,9 @@ class SimpleImage
             $degrees = 270;
         $this->image = imagerotate($this->image, $degrees, 0);
     }
+
+    function rotateDegrees($degrees)
+    {
+        $this->image = imagerotate($this->image, $degrees, 0);
+    }
 }

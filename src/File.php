@@ -133,6 +133,34 @@ class File extends \yii\db\ActiveRecord
         if ($file->type == self::TYPE_VIDEO)
             $file->video_status = 0;
         if ($file->save()) {
+
+            if ($file->type == self::TYPE_IMAGE) {
+                $exif = exif_read_data($path);
+                $ort = $exif['Orientation'];
+                if (isset($exif['Orientation'])) {
+                    $rotatingImage = new SimpleImage();
+                    $rotatingImage->load($path);
+                    switch($ort)
+                    {
+
+                        case 3: // 180 rotate left
+                            $rotatingImage->rotateDegrees(180);
+                            break;
+
+
+                        case 6: // 90 rotate right
+                            $rotatingImage->rotateDegrees(270);
+                            break;
+
+                        case 8:    // 90 rotate left
+                            $rotatingImage->rotateDegrees(90);
+                    }
+                    $rotatingImage->save($path);
+                }
+
+            }
+
+
             $file->updatePreview();
             return $file->id;
         }
@@ -170,6 +198,34 @@ class File extends \yii\db\ActiveRecord
                 $file->video_status = 0;
             if ($file->save()) {
                 $instance->saveAs($path);
+
+                if ($file->type == self::TYPE_IMAGE) {
+                    $exif = exif_read_data($path);
+                    $ort = $exif['Orientation'];
+                    if (isset($exif['Orientation'])) {
+                        $rotatingImage = new SimpleImage();
+                        $rotatingImage->load($path);
+                        switch($ort)
+                        {
+
+                            case 3: // 180 rotate left
+                                $rotatingImage->rotateDegrees(180);
+                                break;
+
+
+                            case 6: // 90 rotate right
+                                $rotatingImage->rotateDegrees(270);
+                                break;
+
+                            case 8:    // 90 rotate left
+                                $rotatingImage->rotateDegrees(90);
+                        }
+                        $rotatingImage->save($path);
+                    }
+
+                }
+
+
                 $file->updatePreview();
                 if ($form->processor)
                     \Yii::createObject($form->processor, [$path])->execute();
