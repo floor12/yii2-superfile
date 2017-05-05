@@ -198,7 +198,7 @@ class File extends \yii\db\ActiveRecord
             if ($file->save()) {
                 $instance->saveAs($path);
 
-                if ($file->type == self::TYPE_IMAGE) {
+                if ($file->type == self::TYPE_IMAGE && ($instance->extension == 'jpg' || $instance->extension == 'jpeg')) {
                     $exif = exif_read_data($path);
                     if (isset($exif['Orientation'])) {
                         $ort = $exif['Orientation'];

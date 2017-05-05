@@ -50,6 +50,7 @@ $(document).ready(function () {
     app.controller('filesController', function ($scope, $http, Upload, $timeout, $rootElement) {
 
         $scope.progress = 0;
+        $scope.loading = false;
         $scope.files = [];
         $scope.config = {};
         $scope.form = $($rootElement).parents('form');
@@ -138,6 +139,7 @@ $(document).ready(function () {
                     console.log($scope.config);
                     $timeout(function () {
                         response.data.filename_preview = response.data.filename + ".jpg?" + Math.random();
+                        $scope.loading = false;
                         if ($scope.config.ratio) {
                             $scope.cropFile(response.data);
                         } else {
@@ -153,6 +155,7 @@ $(document).ready(function () {
                     if (response.status > 0)
                         $scope.errorMsg = response.status + ': ' + response.data;
                 }, function (evt) {
+                    $scope.loading = true;
                     $scope.progress = Math.min(100, parseInt(100.0 *
                         evt.loaded / evt.total));
                     console.log($scope.progress);
