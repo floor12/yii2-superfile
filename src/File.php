@@ -106,6 +106,9 @@ class File extends \yii\db\ActiveRecord
 
     public static function createFromUrl($url, $class, $field)
     {
+        if (!$url)
+            return false;
+        
         $content = file_get_contents($url);
         $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
         $extansion = $tmp_extansion[0];
