@@ -108,7 +108,7 @@ class File extends \yii\db\ActiveRecord
     {
         if (!$url)
             return false;
-        
+
         $content = file_get_contents($url);
         $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
         $extansion = $tmp_extansion[0];
@@ -138,9 +138,10 @@ class File extends \yii\db\ActiveRecord
         if ($file->save()) {
 
             if ($file->type == self::TYPE_IMAGE) {
-                $exif = exif_read_data($path);
-                $ort = $exif['Orientation'];
+                $exif = '';
+                @$exif = exif_read_data($path);
                 if (isset($exif['Orientation'])) {
+                    $ort = $exif['Orientation'];
                     $rotatingImage = new SimpleImage();
                     $rotatingImage->load($path);
                     switch ($ort) {
