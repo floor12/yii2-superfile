@@ -15,7 +15,7 @@
             </a>
 
             <div class="superfile"
-                 ng-class="{previewed: config.preview && file.type==1, hidecontroled: !config.showControl}"
+                 ng-class="{previewed: config.preview && file.type==1 && !config.bricked, hidecontroled: !config.showControl, brick: config.bricked}"
                  data-ratio="{{config.ratio}}" style="background-image: url({{file.filename_preview}})">
 
                 <input name="{{config.classname_short}}[superfilesArray][{{config.field}}][]" value="{{file.id}}"
@@ -69,7 +69,7 @@
     <div class="clearfix"></div>
 
     <div class="progress"  ng-show="progress != 0 && progress!= 100">
-        <divclass="progress-bar  progress-bar-grey progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
+        <div class="progress-bar  progress-bar-grey progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
         <span>{{progress}}%</span>
     </div>
 </div>

@@ -277,6 +277,14 @@ function heightFix() {
         if (!$(this).hasClass('hidecontroled'))
             $(this).find('div.superfile-title-block.hovered').css('margin-top', -65);
     })
+
+    $.each($('.brick'), function () {
+        height = $(this).width() * (4/3);
+        $(this).css('padding-top', height - 30).height(0);
+        $(this).find('div.superfile-title-block').css('margin-top', -27);
+        if (!$(this).hasClass('hidecontroled'))
+            $(this).find('div.superfile-title-block.hovered').css('margin-top', -50);
+    })
 }
 
 setInterval(function () {

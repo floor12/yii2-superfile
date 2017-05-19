@@ -21,6 +21,7 @@ class SuperfileForm
     public $showName = true;
     public $ratio = NULL;
     public $preview = false;
+    public $bricked = false;
     public $title = 'Файлы';
     public $required = false;
     public $multiply = false;

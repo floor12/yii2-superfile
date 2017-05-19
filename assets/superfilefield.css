@@ -60,6 +60,7 @@ div.superfile {
     white-space: nowrap;
     color: white;
     height: 32px;
+    cursor: move;
 }
 
 div.superfile.previewed {
@@ -94,7 +95,6 @@ div.superfile-control {
     background-color: #bbbbb4;
     height: 50px;
     width: 115%;
-    cursor: move;
     padding-left: 13px;
 }
 
@@ -115,3 +115,40 @@ div.superfile-control a:hover {
 .invisible {
     visibility: hidden;
 }
+
+div.superfile.brick {
+    float: left;
+    margin: 0 1% 10px 0;
+    width: 32.3%;
+    background-size: cover;
+    font-size: 70%;
+}
+
+@media (min-width: 768px ) {
+    div.superfile.brick {
+        width: 24%;
+    }
+}
+
+@media (min-width: 992px) {
+    div.superfile.brick {
+        width: 13.2%;
+    }
+}
+
+
+div.superfile.brick div.superfile-title-block {
+    padding-left: 5px;
+}
+
+div.superfile.brick div.superfile-control {
+    padding: 2px 0 0 0;
+}
+
+div.superfile.brick div.superfile-control a {
+    margin: 5px 1.3px;
+}
+
+/*div.superfile.brick div.superfile-title-block.hovered {*/
+    /*margin-top: 35%;*/
+/*}*/
