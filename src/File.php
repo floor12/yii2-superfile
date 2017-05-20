@@ -203,7 +203,8 @@ class File extends \yii\db\ActiveRecord
                 $instance->saveAs($path);
 
                 if ($file->type == self::TYPE_IMAGE && ($instance->extension == 'jpg' || $instance->extension == 'jpeg')) {
-                    $exif = exif_read_data($path);
+                    $exif = '';
+                    @$exif = exif_read_data($path);
                     if (isset($exif['Orientation'])) {
                         $ort = $exif['Orientation'];
                         $rotatingImage = new SimpleImage();
