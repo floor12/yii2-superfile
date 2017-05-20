@@ -43,6 +43,10 @@ a.superfile-deleteOverlay {
     cursor: pointer;
 }
 
+div.superfiles-list {
+    margin-top: 10px;
+}
+
 div.superfile-wripper:hover a.deleteOverlay {
     opacity: 1;
 }
