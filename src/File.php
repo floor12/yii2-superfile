@@ -226,6 +226,13 @@ class File extends \yii\db\ActiveRecord
                         $rotatingImage->save($path);
                     }
 
+                    if ($file->type == self::TYPE_IMAGE && $form->watermark) {
+                        $rotatingImage = new SimpleImage();
+                        $rotatingImage->load($path);
+                        $rotatingImage->watermark($form->watermark);
+                        $rotatingImage->save($path);
+                    }
+
                 }
 
 

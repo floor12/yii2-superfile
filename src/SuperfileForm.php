@@ -32,6 +32,7 @@ class SuperfileForm
     private $extentions = null;
     private $maxSize = null;
     public $validator;
+    public $watermark;
     public $successFunction = "";
     public $errorFunction = "";
     public $deleteFunction = "";
