@@ -123,9 +123,6 @@ class SimpleImage
         imagefilledrectangle($new_stamp, 0, 0, $stamp_new_width, $stamp_new_height, $transparent);
 
         imagecopyresampled($new_stamp, $stamp, 0, 0, 0, 0, $stamp_new_width, $stamp_new_height, imagesx($stamp), imagesy($stamp));
-        imagepng($new_stamp, \Yii::getAlias("@webroot/tmp.png"));
-
-//        $this->image = $new_stamp;
 
         $marge_right = $this->getWidth() / 10;
         $marge_bottom = $this->getHeight() / 10;
