@@ -39,5 +39,5 @@ class m170120_210236_file extends Migration
     public function safeDown()
     {
         $this->dropTable('{{%file}}');
-    }
+    } 
 }

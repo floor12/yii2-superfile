@@ -57,8 +57,8 @@ class File extends \yii\db\ActiveRecord
         $path0 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0;
         $path1 = self::FOLDER_NAME . self::DIRECTORY_SEPARATOR . $folder0 . self::DIRECTORY_SEPARATOR . $folder1;
 
-        $fullPath0 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path0;
-        $fullPath1 = Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path1;
+        $fullPath0 = Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path0;
+        $fullPath1 = Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . self::DIRECTORY_SEPARATOR . $path1;
 
         if (!file_exists($fullPath0))
             mkdir($fullPath0);
@@ -168,6 +168,68 @@ class File extends \yii\db\ActiveRecord
             return $file->id;
         }
 
+    }
+
+
+    public static function createFromPath($path, $class, $field, $name = null)
+    {
+        if (!file_exists($path))
+            throw new ErrorException("No file found with given path");
+
+        $tmp_extansion = explode('?', pathinfo($path, PATHINFO_EXTENSION));
+        $extansion = $tmp_extansion[0];
+        $classname = $class;
+        $filename = self::generatePath() . "." . $extansion;
+        $new_path = Yii::getAlias('@backend/web/') . $filename;
+        rename($path, $new_path);
+
+        $file = new File();
+        $file->field = $field;
+        $file->class = $classname;
+        $file->filename = $filename;
+        if ($name)
+            $file->title = $name;
+        else
+            $file->title = rand(0, 99999); #такой прикол )
+        $file->content_type = mime_content_type($new_path);
+        $file->type = $file->detectType();
+        $file->size = filesize($new_path);
+        $file->created = time();
+        $file->user_id = (isset(\Yii::$app->user) && \Yii::$app->user->id) ? \Yii::$app->user->id : 0;
+        if ($file->type == self::TYPE_VIDEO)
+            $file->video_status = 0;
+        if ($file->save()) {
+
+            if ($file->type == self::TYPE_IMAGE) {
+                $exif = '';
+                @$exif = exif_read_data($new_path);
+                if (isset($exif['Orientation'])) {
+                    $ort = $exif['Orientation'];
+                    $rotatingImage = new SimpleImage();
+                    $rotatingImage->load($new_path);
+                    switch ($ort) {
+
+                        case 3: // 180 rotate left
+                            $rotatingImage->rotateDegrees(180);
+                            break;
+
+
+                        case 6: // 90 rotate right
+                            $rotatingImage->rotateDegrees(270);
+                            break;
+
+                        case 8:    // 90 rotate left
+                            $rotatingImage->rotateDegrees(90);
+                    }
+                    $rotatingImage->save($new_path);
+                }
+
+            }
+
+
+            $file->updatePreview();
+            return $file->id;
+        }
     }
 
     /**
