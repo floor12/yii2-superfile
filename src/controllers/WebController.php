@@ -30,6 +30,7 @@ class WebController extends ActiveController
             ],
             'format' => [
                 'class' => 'yii\filters\ContentNegotiator',
+                'except' => ['get'],
                 'formats' => [
                     'application/xml' => Response::FORMAT_XML,
                     'application/json' => Response::FORMAT_JSON,
@@ -67,8 +68,27 @@ class WebController extends ActiveController
             throw new NotFoundHttpException('This file not found.');
         if (!$file->delete())
             throw new BadRequestHttpException('Delete error');
+    }
 
+    public function actionGet($hash)
+    {
+        $model = File::findOne(['hash' => $hash]);
+        if (!$model)
+            throw new NotFoundHttpException();
 
+        $response = Yii::$app->getResponse();
+
+        if ($model->type == File::TYPE_IMAGE) {
+            $response->headers->set('Content-Type', $model->content_type);
+        } else {
+            $response->setDownloadHeaders($model->title, $model->content_type, false, $model->size);
+        }
+        $response->format = Response::FORMAT_RAW;
+        if (!is_resource($response->stream = fopen($model->rootPath, 'r'))) {
+            throw new \yii\web\ServerErrorHttpException('file access failed: permission deny');
+        }
+
+        return $response->send();
     }
 
     public function actionCrop()

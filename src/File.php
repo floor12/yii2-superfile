@@ -22,6 +22,7 @@ use yii\web\BadRequestHttpException;
  * @property string $field
  * @property integer $object_id
  * @property string $title
+ * @property string $hash
  * @property string $filename
  * @property string $content_type
  * @property integer $type
@@ -103,21 +104,27 @@ class File extends \yii\db\ActiveRecord
 
     }
 
+    public function beforeSave($insert)
+    {
+        if (!$this->hash) {
+            $this->hash = md5(time() . rand(99999, 99999999999999999));
+        }
+        return parent::beforeSave($insert);
+    }
 
-    public static function createFromUrl($url, $class, $field, $object_id = null)
+
+    public static function createFromUrl($url, $class, $field)
     {
         if (!$url)
             return false;
 
         $content = file_get_contents($url);
-        if (!$content)
-            return false;
         $tmp_extansion = explode('?', pathinfo($url, PATHINFO_EXTENSION));
         $extansion = $tmp_extansion[0];
         $classname = $class;
         $filename = self::generatePath() . "." . $extansion;
 
-        $path = Yii::getAlias('@backend/web/') . $filename;
+        $path = Yii::getAlias('@webroot') . $filename;
 
         $fileOnDisk = fopen($path, "w");
         if (!$fileOnDisk)
@@ -134,8 +141,6 @@ class File extends \yii\db\ActiveRecord
         $file->type = $file->detectType();
         $file->size = filesize($path);
         $file->created = time();
-        if ($object_id)
-            $file->object_id = $object_id;
         $file->user_id = (isset(\Yii::$app->user) && \Yii::$app->user->id) ? \Yii::$app->user->id : 0;
         if ($file->type == self::TYPE_VIDEO)
             $file->video_status = 0;
@@ -170,9 +175,6 @@ class File extends \yii\db\ActiveRecord
 
             $file->updatePreview();
             return $file->id;
-        } else {
-            print_r($file->getErrors());
-            die();
         }
 
     }
@@ -532,7 +534,7 @@ class File extends \yii\db\ActiveRecord
                     $image->save($this->rootPath);
                 }
                 $image->resizeToWidth(350);
-                print_r($image->save($this->rootPreviewPath));
+                $image->save($this->rootPreviewPath);
             }
     }
 
@@ -543,7 +545,7 @@ class File extends \yii\db\ActiveRecord
 
     public function getRootPath()
     {
-        return Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename;
+        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename;
     }
 
     /**
@@ -553,13 +555,23 @@ class File extends \yii\db\ActiveRecord
 
     public function getRootPreviewPath()
     {
-        return Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
+        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
     }
 
     /**
      * Return web path of preview
      * @return string
      */
+
+    public function getHref()
+    {
+        return "/superfile/get/{$this->hash}";
+    }
+
+    public function getPreview()
+    {
+        return $this->filenamePreview();
+    }
 
 
     public function getFilenamePreview()

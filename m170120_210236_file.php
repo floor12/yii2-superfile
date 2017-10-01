@@ -32,6 +32,7 @@ class m170120_210236_file extends Migration
                 'created'=> $this->integer(11)->notNull(),
                 'user_id'=> $this->integer(11)->notNull(),
                 'size'=> $this->bigint(20)->notNull(),
+                'hash'=> $this->string(255)->null(),
             ],$tableOptions
         );
     }
