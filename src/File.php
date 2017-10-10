@@ -107,7 +107,7 @@ class File extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (!$this->hash) {
-            $this->hash = md5(time() . rand(99999, 99999999999999999));
+            $this->hash = md5(time() . rand(99999, 99999999));
         }
         return parent::beforeSave($insert);
     }
