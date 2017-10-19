@@ -545,7 +545,7 @@ class File extends \yii\db\ActiveRecord
 
     public function getRootPath()
     {
-        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename;
+        return Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename;
     }
 
     /**
@@ -555,7 +555,7 @@ class File extends \yii\db\ActiveRecord
 
     public function getRootPreviewPath()
     {
-        return Yii::getAlias('@app') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
+        return Yii::getAlias('@backend') . self::DIRECTORY_SEPARATOR . 'web' . $this->filename . '.jpg';
     }
 
     /**
