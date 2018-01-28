@@ -72,7 +72,7 @@ class SuperfileBehavior extends Behavior
 
     public function getFiles()
     {
-        return $this->owner->hasMany(File::className(), ['object_id' => 'id'])->orderBy('ordering ASC')->onCondition(['class' => $this->owner->className()]);;
+        return $this->owner->hasMany(File::className(), ['object_id' => 'id'])->orderBy('ordering ASC')->onCondition(['class' => $this->owner->className()]);
     }
 
     public function getSuperfiles()

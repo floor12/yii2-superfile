@@ -131,7 +131,7 @@ $(document).ready(function () {
 
             angular.forEach(files, function (file) {
                 file.upload = Upload.upload({
-                    url: '/superfile/create/',
+                    url: '/superfile/create',
                     data: {'file[]': file, 'class': $scope.config.classname, field: $scope.config.field}
                 });
 
