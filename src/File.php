@@ -45,6 +45,16 @@ class File extends \yii\db\ActiveRecord
 
     const FOLDER_NAME = 'uploadedfiles';
 
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->filename;
+    }
+
+
     /**
      * Generated rand path to file saving
      * @return string
